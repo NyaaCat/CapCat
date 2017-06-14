@@ -1,0 +1,7 @@
+name: Capcat
+main: cat.nyaa.capcat.Capcat
+description: "Capitalized NyaaCraft"
+version: 1.0
+depend: [Vault]
+authors: [RecursiveG]
+website: "https://github.com/NyaaCat/capcat"
