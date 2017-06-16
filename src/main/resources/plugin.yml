@@ -5,3 +5,16 @@ version: 1.0
 depend: [Vault]
 authors: [RecursiveG]
 website: "https://github.com/NyaaCat/capcat"
+
+commands:
+  capcat:
+    description: The command for Capcat
+    aliases: cc
+    permission: cc.command
+    permission-message: "You do not have the required permission: <permission>"
+    usage: "/<command> [SubCommand...] [Arguments...] or /<command> help"
+
+permissions:
+  cc.command:
+    description: Base permission node for commands
+    default: true

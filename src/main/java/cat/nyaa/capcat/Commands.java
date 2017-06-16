@@ -10,8 +10,8 @@ public class Commands extends CommandReceiver<Capcat> {
     public Commands(Object plugin, LanguageRepository i18n) {
         super((Capcat) plugin, i18n);
         this.plugin = (Capcat) plugin;
-        ((Capcat) plugin).getCommand("cc").setExecutor(this);
-        ((Capcat) plugin).getCommand("cc").setTabCompleter(this);
+        ((Capcat) plugin).getCommand("capcat").setExecutor(this);
+        ((Capcat) plugin).getCommand("capcat").setTabCompleter(this);
     }
 
     @Override

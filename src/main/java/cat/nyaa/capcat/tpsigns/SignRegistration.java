@@ -11,23 +11,32 @@ import java.util.UUID;
 @DataTable("sign_registration")
 public class SignRegistration {
     public static final String N_SIGN_ID = "sign_id";
-    public static final String N_SIGN_FEE = "fee";
+    public static final String N_SIGN_ACQUIRE_FEE = "acquire_fee";
+    public static final String N_SIGN_TELEPORT_FEE = "teleport_fee";
     public static final String N_SIGN_OWNER = "owner_uuid";
-    public static final String N_SIGN_ACTIVATED = "activated";
+    public static final String N_SIGN_ACQUIRED = "acquired";
 
     public static final String N_LOCATION_WORLD_NAME = "location_world_name";
     public static final String N_LOCATION_X = "location_x";
     public static final String N_LOCATION_Y = "location_y";
     public static final String N_LOCATION_Z = "location_z";
 
+    public static final String N_TARGET_WORLD="target_world_name";
+    public static final String N_TARGET_X = "target_x";
+    public static final String N_TARGET_Y = "target_y";
+    public static final String N_TARGET_Z = "target_z";
+
     public UUID signId;
     public UUID ownerId;
-    public Location location;
-    @DataColumn(N_SIGN_ACTIVATED)
-    public Boolean activated;
-    @DataColumn(N_SIGN_FEE)
-    public Double fee;
+    @DataColumn(N_SIGN_ACQUIRED)
+    public Boolean acquired;
+    @DataColumn(N_SIGN_ACQUIRE_FEE)
+    public Double acquireFee;
+    @DataColumn(N_SIGN_TELEPORT_FEE)
+    public Double teleportFee;
 
+    public Location location;
+    public Location targetLocation;
 
     @PrimaryKey
     @DataColumn(N_SIGN_ID)
@@ -97,6 +106,58 @@ public class SignRegistration {
             location = new Location(Bukkit.getWorlds().get(0), 0, 0, z);
         } else {
             location.setZ(z);
+        }
+    }
+
+    @DataColumn(N_TARGET_WORLD)
+    public String getTargetWorldName() {
+        return targetLocation.getWorld().getName();
+    }
+
+    public void setTargetWorldName(String worldName) {
+        if (targetLocation == null) {
+            targetLocation = new Location(Bukkit.getWorld(worldName), 0, 0, 0);
+        } else {
+            targetLocation.setWorld(Bukkit.getWorld(worldName));
+        }
+    }
+
+    @DataColumn(N_TARGET_X)
+    public Long getTargetX() {
+        return (long)targetLocation.getBlockX();
+    }
+
+    public void setTargetX(Long x) {
+        if (targetLocation == null) {
+            targetLocation = new Location(Bukkit.getWorlds().get(0), x, 0, 0);
+        } else {
+            targetLocation.setX(x);
+        }
+    }
+
+    @DataColumn(N_TARGET_Y)
+    public Long getTargetY() {
+        return (long)targetLocation.getBlockY();
+    }
+
+    public void setTargetY(Long y) {
+        if (targetLocation == null) {
+            targetLocation = new Location(Bukkit.getWorlds().get(0), 0, y, 0);
+        } else {
+            targetLocation.setY(y);
+        }
+    }
+
+    @DataColumn(N_TARGET_Z)
+    public Long getTargetZ() {
+        return (long)targetLocation.getBlockZ();
+    }
+
+    public void setTargetZ(Long z) {
+        if (targetLocation == null) {
+            targetLocation = new Location(Bukkit.getWorlds().get(0), 0, 0, z);
+        } else {
+            targetLocation.setZ(z);
         }
     }
 }

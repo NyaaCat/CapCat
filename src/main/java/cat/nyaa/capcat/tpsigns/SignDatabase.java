@@ -33,6 +33,10 @@ public class SignDatabase extends SQLiteDatabase {
         };
     }
 
+    /**
+     * Return the registered sign at the given location
+     * Return null if the location is not in database
+     */
     public SignRegistration getSign(Location loc) {
         if (loc == null) throw new IllegalArgumentException();
         List<SignRegistration> signs = query(SignRegistration.class)
