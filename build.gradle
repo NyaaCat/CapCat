@@ -31,6 +31,11 @@ repositories {
         name 'NyaaCore'
         url 'https://raw.githubusercontent.com/NyaaCat/NyaaCore/maven-repo'
     }
+
+    maven {
+        name 'nu-langchecker'
+        url 'https://raw.githubusercontent.com/Librazy/NyaaUtilsLangChecker/maven-repo'
+    }
 }
 
 dependencies {
@@ -38,4 +43,9 @@ dependencies {
     compile('cat.nyaa:nyaacore:2.0-SNAPSHOT') {
         transitive = false
     }
+    compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+}
+
+compileJava {
+    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
 }
