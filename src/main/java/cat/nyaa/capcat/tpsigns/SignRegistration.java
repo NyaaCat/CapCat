@@ -15,6 +15,7 @@ public class SignRegistration {
     public static final String N_SIGN_TELEPORT_FEE = "teleport_fee";
     public static final String N_SIGN_OWNER = "owner_uuid";
     public static final String N_SIGN_ACQUIRED = "acquired";
+    public static final String N_SIGN_DESC = "description";
 
     public static final String N_LOCATION_WORLD_NAME = "location_world_name";
     public static final String N_LOCATION_X = "location_x";
@@ -34,6 +35,8 @@ public class SignRegistration {
     public Double acquireFee;
     @DataColumn(N_SIGN_TELEPORT_FEE)
     public Double teleportFee;
+    @DataColumn(N_SIGN_DESC)
+    public String description;
 
     public Location location;
     public Location targetLocation;

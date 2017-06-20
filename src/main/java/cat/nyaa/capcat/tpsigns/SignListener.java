@@ -1,6 +1,7 @@
 package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -25,9 +26,14 @@ public class SignListener implements Listener {
         Sign s = (Sign) b.getState();
         SignRegistration sr = plugin.signDB.getSign(s.getLocation());
         if (sr == null || !sr.acquired) return;
+        float pitch = ev.getPlayer().getLocation().getPitch();
+        float yaw = ev.getPlayer().getLocation().getYaw();
 
         // TODO set return point (Essectial)
-        ev.getPlayer().teleport(sr.targetLocation);
+        Location target = sr.targetLocation.clone();
+        target.setPitch(pitch);
+        target.setYaw(yaw);
+        ev.getPlayer().teleport(target);
         // TODO pay fee
     }
 }

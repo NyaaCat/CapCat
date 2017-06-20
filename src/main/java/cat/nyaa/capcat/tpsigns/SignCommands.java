@@ -81,7 +81,9 @@ public class SignCommands extends CommandReceiver<Capcat> {
         if ("confirm".equals(description)) {
             Sign s = getSignLookat(sender);
             SignRegistration sr = createSignMap.get(asPlayer(sender).getUniqueId());
-            if (sr == null || !s.getLocation().equals(sr.location) || sr.acquired
+            SignRegistration srNow = plugin.signDB.getSign(s.getLocation());
+
+            if (sr == null || srNow == null || !s.getLocation().equals(sr.location) || srNow.acquired
                     || plugin.signDB.getSign(s.getLocation()) == null)
                 throw new BadCommandException("user.tp.invalid_confirmation");
             plugin.signDB.query(SignRegistration.class).update(sr);
@@ -99,6 +101,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
             double price = args.nextDouble();
             Location loc = new Location(w,x,y,z);
 
+            sr.description = description;
             sr.ownerId = asPlayer(sender).getUniqueId();
             sr.targetLocation = loc;
             sr.teleportFee = price;
