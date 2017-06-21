@@ -2,3 +2,4 @@ user:
   tp:
     sign_title: "[Teleport]"
     available: "<Available>"
+    not_sign: "You must target a sign"

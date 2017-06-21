@@ -72,6 +72,7 @@ public class SignDatabase extends SQLiteDatabase {
             s.setLine(2, I18n.format("user.tp.available"));
             s.setLine(3, String.format("%.1f", sr.acquireFee));
         }
+        s.update();
         return true;
     }
 }

@@ -1,12 +1,10 @@
 package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
+import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -49,9 +47,10 @@ public class SignCommands extends CommandReceiver<Capcat> {
         reg.signId = UUID.randomUUID();
         reg.location = signLookAt.getLocation().clone();
         reg.teleportFee = 0D;
-        reg.targetLocation = signLookAt.getLocation();
+        reg.targetLocation = signLookAt.getLocation().clone();
+        reg.description = I18n.format("user.tp.available");
         plugin.signDB.query(SignRegistration.class).insert(reg);
-        // TODO: change sign content
+        SignDatabase.updateSignContent(reg);
     }
 
     /**
@@ -67,7 +66,10 @@ public class SignCommands extends CommandReceiver<Capcat> {
             throw new BadCommandException("user.tp.not_registered");
         }
         plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, reg.getSignId()).delete();
-        // TODO: change sign content
+        for (int i = 0; i < 4; i++) {
+            signLookAt.setLine(i, "");
+        }
+        signLookAt.update();
     }
 
     private final Map<UUID, SignRegistration> createSignMap = new HashMap<>();
@@ -77,16 +79,19 @@ public class SignCommands extends CommandReceiver<Capcat> {
      */
     @SubCommand(value = "create",permission = "cc.tp.create")
     public void acquireSign(CommandSender sender, Arguments args) {
-        String description = args.nextString();
+        String description = nextDescription(args);
+        Player player = asPlayer(sender);
         if ("confirm".equals(description)) {
             Sign s = getSignLookat(sender);
-            SignRegistration sr = createSignMap.get(asPlayer(sender).getUniqueId());
+            SignRegistration sr = createSignMap.get(player.getUniqueId());
             SignRegistration srNow = plugin.signDB.getSign(s.getLocation());
 
             if (sr == null || srNow == null || !s.getLocation().equals(sr.location) || srNow.acquired
-                    || plugin.signDB.getSign(s.getLocation()) == null)
+                    || !srNow.signId.equals(sr.signId))
                 throw new BadCommandException("user.tp.invalid_confirmation");
-            plugin.signDB.query(SignRegistration.class).update(sr);
+            plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
+            SignDatabase.updateSignContent(sr);
+            createSignMap.remove(player.getUniqueId());
             // TODO reduce balance
         } else {
             Sign s = getSignLookat(sender);
@@ -102,7 +107,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
             Location loc = new Location(w,x,y,z);
 
             sr.description = description;
-            sr.ownerId = asPlayer(sender).getUniqueId();
+            sr.ownerId = player.getUniqueId();
             sr.targetLocation = loc;
             sr.teleportFee = price;
             sr.acquired = true;
@@ -121,14 +126,14 @@ public class SignCommands extends CommandReceiver<Capcat> {
     public void releaseSign(CommandSender sender, Arguments args) {
         Sign sign = getSignLookat(sender);
         SignRegistration sr = plugin.signDB.getSign(sign.getLocation());
-        if (sr == null || !sr.acquired || !asPlayer(sender).getUniqueId().equals(sr.getOwnerId()))
+        if (sr == null || !sr.acquired || !asPlayer(sender).getUniqueId().equals(sr.ownerId))
             throw new BadCommandException("user.tp.cannot_release");
         double price = args.nextDouble();
         sr.acquireFee = price;
         sr.acquired = false;
         plugin.signDB.query(SignRegistration.class).update(sr, SignRegistration.N_SIGN_ACQUIRE_FEE,
                 SignRegistration.N_SIGN_ACQUIRED);
-        // TODO update sign content
+        SignDatabase.updateSignContent(sr);
     }
 
     public World nextWorld(Arguments args) {
@@ -140,7 +145,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
 
     public Sign getSignLookat(CommandSender sender) {
         Player p = asPlayer(sender);
-        Block b = p.getTargetBlock((Set<Material>)null, 10);
+        Block b = p.getTargetBlock((Set<Material>) null, 5);// TODO use nms rayTrace
 
         if (b == null || !b.getType().isBlock() || (b.getType() != Material.WALL_SIGN && b.getType() != Material.SIGN_POST)) {
             throw new BadCommandException("user.tp.not_sign");
@@ -148,4 +153,12 @@ public class SignCommands extends CommandReceiver<Capcat> {
         return (Sign)b.getState();
     }
 
+    public String nextDescription(Arguments args) {
+        String desc = ChatColor.translateAlternateColorCodes('&', args.nextString());
+
+        if (ChatColor.stripColor(desc).length() > 12) {
+            throw new BadCommandException("user.tp.desc_too_long");
+        }
+        return desc;
+    }
 }
