@@ -63,12 +63,11 @@ public class SignDatabase extends SQLiteDatabase {
             return false;
         Sign s = (Sign)b.getState();
         s.setLine(0, I18n.format("user.tp.sign_title"));
+        s.setLine(1, sr.description);
         if (sr.acquired) {
-            s.setLine(1, sr.description);
             s.setLine(2, String.format("%.0f %.0f %.0f", sr.targetLocation.getX(), sr.targetLocation.getY(),sr.targetLocation.getZ()));
             s.setLine(3, String.format("%.1f", sr.teleportFee));
         } else {
-            s.setLine(1, "");
             s.setLine(2, I18n.format("user.tp.available"));
             s.setLine(3, String.format("%.1f", sr.acquireFee));
         }

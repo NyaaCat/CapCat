@@ -1,5 +1,36 @@
-user:
+user:  
+  error:
+    not_sign: "You must target a sign"
+    not_enough_money: "You do not have enough money"
+    invalid_price: "Price must be between %.1f and %.1f"
+    blocked_format_codes: "You can not use the format code: %s"
+    world_not_exists: "World %s not exists"
   tp:
     sign_title: "[Teleport]"
     available: "<Available>"
-    not_sign: "You must target a sign"
+    already_registered: "This sign already register"
+    not_registered: "Invalid teleport sign"
+    sign_acquired: "This sign already acquired"
+    need_confirm: "Please use &b/cc tp create confirm &rto confirm"
+    invalid_confirmation: "Invalid confirmation"
+    cannot_release: "You can not release this sign"
+    desc_too_long: "Max description length: %d"
+    info:
+      owner: "Teleport sign owner: %s"
+manual:
+  help:
+    description: "Show help message"
+    usage: "/nu [subCommands...] help"
+  tp:
+    sign:
+      description: "Register a teleport sign"
+      usage: "/cc tp sign <price>"
+    create:
+      description: "Acquire a teleport sign"
+      usage: "/cc tp create <desc> <world> <x> <y> <z> <teleportFee>"
+    remove:
+      description: "Remove a teleport sign"
+      usage: "/cc tp remove"
+    release:
+      description: "Release a teleport sign"
+      usage: "/cc tp release <price>"

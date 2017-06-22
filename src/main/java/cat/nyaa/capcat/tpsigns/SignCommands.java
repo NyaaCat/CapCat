@@ -1,9 +1,10 @@
 package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
-import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.VaultUtils;
+import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -48,7 +49,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
         reg.location = signLookAt.getLocation().clone();
         reg.teleportFee = 0D;
         reg.targetLocation = signLookAt.getLocation().clone();
-        reg.description = I18n.format("user.tp.available");
+        reg.description = args.length() == 4 ? nextDescription(args) : "";
         plugin.signDB.query(SignRegistration.class).insert(reg);
         SignDatabase.updateSignContent(reg);
     }
@@ -89,23 +90,32 @@ public class SignCommands extends CommandReceiver<Capcat> {
             if (sr == null || srNow == null || !s.getLocation().equals(sr.location) || srNow.acquired
                     || !srNow.signId.equals(sr.signId))
                 throw new BadCommandException("user.tp.invalid_confirmation");
+            if (!VaultUtils.enoughMoney(player, sr.acquireFee) || !VaultUtils.withdraw(player, sr.acquireFee)) {
+                throw new BadCommandException("user.error.not_enough_money");
+            }
+            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(sr.acquireFee);
+            Bukkit.getServer().getPluginManager().callEvent(event);
             plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
             createSignMap.remove(player.getUniqueId());
-            // TODO reduce balance
         } else {
             Sign s = getSignLookat(sender);
             SignRegistration sr = plugin.signDB.getSign(s.getLocation());
             if (sr == null) throw new BadCommandException("user.tp.not_registered");
             if (sr.acquired) throw new BadCommandException("user.tp.sign_acquired");
-
+            if (!VaultUtils.enoughMoney(player, sr.acquireFee)) {
+                throw new BadCommandException("user.error.not_enough_money");
+            }
             World w = nextWorld(args);
             double x = args.nextDouble();
             double y = args.nextDouble();
             double z = args.nextDouble();
             double price = args.nextDouble();
             Location loc = new Location(w,x,y,z);
-
+            if (!(price <= plugin.cfg.tpsignTeleportFeeMax && price >= plugin.cfg.tpsignTeleportFeeMin)) {
+                throw new BadCommandException("user.error.invalid_price", 
+                        plugin.cfg.tpsignTeleportFeeMin, plugin.cfg.tpsignTeleportFeeMax);
+            }
             sr.description = description;
             sr.ownerId = player.getUniqueId();
             sr.targetLocation = loc;
@@ -129,17 +139,21 @@ public class SignCommands extends CommandReceiver<Capcat> {
         if (sr == null || !sr.acquired || !asPlayer(sender).getUniqueId().equals(sr.ownerId))
             throw new BadCommandException("user.tp.cannot_release");
         double price = args.nextDouble();
+        if (!(price <= plugin.cfg.tpsignAcquireFeeMax && price >= plugin.cfg.tpsignAcquireFeeMin)) {
+            throw new BadCommandException("user.error.invalid_price",
+                    plugin.cfg.tpsignAcquireFeeMin, plugin.cfg.tpsignAcquireFeeMax);
+        }
         sr.acquireFee = price;
         sr.acquired = false;
-        plugin.signDB.query(SignRegistration.class).update(sr, SignRegistration.N_SIGN_ACQUIRE_FEE,
-                SignRegistration.N_SIGN_ACQUIRED);
+        sr.description = "";
+        plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
         SignDatabase.updateSignContent(sr);
     }
 
     public World nextWorld(Arguments args) {
         String worldName = args.nextString();
         World w = Bukkit.getWorld(worldName);
-        if (w == null) throw new BadCommandException("user.tp.world_not_exists");
+        if (w == null) throw new BadCommandException("user.error.world_not_exists");
         return w;
     }
 
@@ -148,16 +162,22 @@ public class SignCommands extends CommandReceiver<Capcat> {
         Block b = p.getTargetBlock((Set<Material>) null, 5);// TODO use nms rayTrace
 
         if (b == null || !b.getType().isBlock() || (b.getType() != Material.WALL_SIGN && b.getType() != Material.SIGN_POST)) {
-            throw new BadCommandException("user.tp.not_sign");
+            throw new BadCommandException("user.error.not_sign");
         }
         return (Sign)b.getState();
     }
 
     public String nextDescription(Arguments args) {
-        String desc = ChatColor.translateAlternateColorCodes('&', args.nextString());
+        String raw = args.nextString();
+        for (String c : plugin.cfg.disabledFormatCodes) {
+            if (raw.toLowerCase().contains("&" + c.toLowerCase())) {
+                throw new BadCommandException("user.error.blocked_format_codes", plugin.cfg.disabledFormatCodes);
+            }
+        }
+        String desc = ChatColor.translateAlternateColorCodes('&', raw);
 
-        if (ChatColor.stripColor(desc).length() > 12) {
-            throw new BadCommandException("user.tp.desc_too_long");
+        if (ChatColor.stripColor(desc).length() > plugin.cfg.tpsignDescMaxLength) {
+            throw new BadCommandException("user.tp.desc_too_long", plugin.cfg.tpsignDescMaxLength);
         }
         return desc;
     }
