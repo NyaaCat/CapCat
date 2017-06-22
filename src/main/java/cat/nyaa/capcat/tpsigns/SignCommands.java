@@ -1,6 +1,7 @@
 package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
+import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.utils.VaultUtils;
@@ -40,11 +41,12 @@ public class SignCommands extends CommandReceiver<Capcat> {
         if (plugin.signDB.getSign(signLookAt.getLocation()) != null) {
             throw new BadCommandException("user.tp.already_registered");
         }
+        Player player = asPlayer(sender);
         Double price = args.nextDouble();
         SignRegistration reg = new SignRegistration();
         reg.acquired = false;
         reg.acquireFee = price;
-        reg.ownerId = ((Player)sender).getUniqueId();
+        reg.ownerId = player.getUniqueId();
         reg.signId = UUID.randomUUID();
         reg.location = signLookAt.getLocation().clone();
         reg.teleportFee = 0D;
@@ -52,6 +54,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
         reg.description = args.length() == 4 ? nextDescription(args) : "";
         plugin.signDB.query(SignRegistration.class).insert(reg);
         SignDatabase.updateSignContent(reg);
+        logToConsole(reg, "user.log.tpsign_register", player.getName(), price);
     }
 
     /**
@@ -71,6 +74,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
             signLookAt.setLine(i, "");
         }
         signLookAt.update();
+        logToConsole(reg, "user.log.tpsign_remove", asPlayer(sender).getName());
     }
 
     private final Map<UUID, SignRegistration> createSignMap = new HashMap<>();
@@ -97,6 +101,8 @@ public class SignCommands extends CommandReceiver<Capcat> {
             Bukkit.getServer().getPluginManager().callEvent(event);
             plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
+            logToConsole(sr, "user.log.tpsign_acquire", player.getName(), sr.acquireFee, sr.teleportFee,
+                    sr.description, sr.getTargetWorldName(), sr.getTargetX(), sr.getTargetY(), sr.getTargetZ());
             createSignMap.remove(player.getUniqueId());
         } else {
             Sign s = getSignLookat(sender);
@@ -135,8 +141,9 @@ public class SignCommands extends CommandReceiver<Capcat> {
     @SubCommand(value = "release", permission = "cc.tp.release")
     public void releaseSign(CommandSender sender, Arguments args) {
         Sign sign = getSignLookat(sender);
+        Player player = asPlayer(sender);
         SignRegistration sr = plugin.signDB.getSign(sign.getLocation());
-        if (sr == null || !sr.acquired || !asPlayer(sender).getUniqueId().equals(sr.ownerId))
+        if (sr == null || !sr.acquired || !player.getUniqueId().equals(sr.ownerId))
             throw new BadCommandException("user.tp.cannot_release");
         double price = args.nextDouble();
         if (!(price <= plugin.cfg.tpsignAcquireFeeMax && price >= plugin.cfg.tpsignAcquireFeeMin)) {
@@ -148,6 +155,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
         sr.description = "";
         plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
         SignDatabase.updateSignContent(sr);
+        logToConsole(sr, "user.log.tpsign_release", player.getName(), price);
     }
 
     public World nextWorld(Arguments args) {
@@ -180,5 +188,11 @@ public class SignCommands extends CommandReceiver<Capcat> {
             throw new BadCommandException("user.tp.desc_too_long", plugin.cfg.tpsignDescMaxLength);
         }
         return desc;
+    }
+
+    public void logToConsole(SignRegistration sr, String key, Object... obj) {
+        plugin.getLogger().info(I18n.format("user.log.tpsign_loc",
+                sr.getWorldName(), sr.getCoordinateX(), sr.getCoordinateY(), sr.getCoordinateZ()) +
+                I18n.format(key, obj));
     }
 }

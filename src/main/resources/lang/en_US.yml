@@ -5,6 +5,12 @@ user:
     invalid_price: "Price must be between %.1f and %.1f"
     blocked_format_codes: "You can not use the format code: %s"
     world_not_exists: "World %s not exists"
+  log:
+    tpsign_loc: "[tpsign][%s, %d, %d, %d] "
+    tpsign_register: "register, player: %s, acquireFee: %.1f"
+    tpsign_remove: "remove, player: %s"
+    tpsign_acquire: "acquire, player: %s, acquireFee: %.1f, teleportFee: %.1f, desc: %s&r, target: [%s, %d, %d, %d]"
+    tpsign_release: "release, player: %s, acquireFee: %.1f"
   tp:
     sign_title: "[Teleport]"
     available: "<Available>"
