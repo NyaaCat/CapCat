@@ -30,3 +30,5 @@ permissions:
   cc.tp.release:
     description: Release a teleport sign
     default: true
+  cc.admin:
+    default: op

@@ -2,6 +2,7 @@ package cat.nyaa.capcat;
 
 import cat.nyaa.capcat.tpsigns.SignDatabase;
 import cat.nyaa.capcat.tpsigns.SignListener;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Capcat extends JavaPlugin {
@@ -14,6 +15,7 @@ public class Capcat extends JavaPlugin {
     @Override
     public void onDisable() {
         cfg.save();
+        HandlerList.unregisterAll(this);
     }
 
     @Override
@@ -23,5 +25,10 @@ public class Capcat extends JavaPlugin {
         cmd = new Commands(this, i18n);
         signDB = new SignDatabase(this);
         signListener = new SignListener(this);
+    }
+
+    public void reload() {
+        HandlerList.unregisterAll(this);
+        onEnable();
     }
 }

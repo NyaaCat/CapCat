@@ -3,6 +3,7 @@ package cat.nyaa.capcat;
 import cat.nyaa.capcat.tpsigns.SignCommands;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import org.bukkit.command.CommandSender;
 
 public class Commands extends CommandReceiver<Capcat> {
     private final Capcat plugin;
@@ -21,4 +22,9 @@ public class Commands extends CommandReceiver<Capcat> {
 
     @SubCommand("tp")
     public SignCommands teleportSignCommands;
+    
+    @SubCommand(value = "reload", permission = "cc.admin")
+    public void reload(CommandSender sender, Arguments args) {
+        plugin.reload();
+    }
 }
