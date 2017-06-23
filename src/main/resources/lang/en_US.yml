@@ -22,6 +22,8 @@ user:
     invalid_confirmation: "Invalid confirmation"
     cannot_release: "You can not release this sign"
     desc_too_long: "Max description length: %d"
+    tp_error: "Can not teleport to target location"
+    must_empty: "Sign must be empty"
     info:
       owner: "Teleport sign owner: %s"
 manual:

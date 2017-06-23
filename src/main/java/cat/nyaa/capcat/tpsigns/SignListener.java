@@ -43,26 +43,37 @@ public class SignListener implements Listener {
             }
             return;
         }
-        if (!VaultUtils.enoughMoney(player, sr.teleportFee) || !VaultUtils.withdraw(player, sr.teleportFee)) {
+        if (!VaultUtils.enoughMoney(player, sr.teleportFee)) {
             player.sendMessage(I18n.format("user.error.not_enough_money"));
             return;
         }
-        double tax = 0.0D;
-        if (plugin.cfg.tax > 0) {
-            tax = (sr.teleportFee / 100) * plugin.cfg.tax;
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(tax);
-            plugin.getServer().getPluginManager().callEvent(event);
-        }
-        if (signOwner != null) {
-            VaultUtils.deposit(signOwner, sr.teleportFee - tax);
-        }
         float pitch = player.getLocation().getPitch();
         float yaw = player.getLocation().getYaw();
-
-        Location target = sr.targetLocation.clone();
-        target.setPitch(pitch);
-        target.setYaw(yaw);
-        TeleportUtils.Teleport(player, target);
+        if (sr.targetLocation != null && sr.targetLocation.getWorld() != null) {
+            Location target = sr.targetLocation.clone();
+            target.setPitch(pitch);
+            target.setYaw(yaw);
+            if (target.getWorld().getWorldBorder().isInside(target)) {
+                boolean success = TeleportUtils.Teleport(player, target);
+                if (success) {
+                    if (!VaultUtils.withdraw(player, sr.teleportFee)) {
+                        player.sendMessage(I18n.format("user.error.not_enough_money"));
+                        return;
+                    }
+                    double tax = 0.0D;
+                    if (plugin.cfg.tax > 0) {
+                        tax = (sr.teleportFee / 100) * plugin.cfg.tax;
+                        HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(tax);
+                        plugin.getServer().getPluginManager().callEvent(event);
+                    }
+                    if (signOwner != null) {
+                        VaultUtils.deposit(signOwner, sr.teleportFee - tax);
+                    }
+                    return;
+                }
+            }
+        }
+        player.sendMessage(I18n.format("user.tp.tp_error"));
     }
 
     @EventHandler(ignoreCancelled = true)

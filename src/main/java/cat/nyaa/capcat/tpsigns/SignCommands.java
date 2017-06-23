@@ -41,6 +41,11 @@ public class SignCommands extends CommandReceiver<Capcat> {
         if (plugin.signDB.getSign(signLookAt.getLocation()) != null) {
             throw new BadCommandException("user.tp.already_registered");
         }
+        for (String s : signLookAt.getLines()) {
+            if (s.length() > 0) {
+                throw new BadCommandException("user.tp.must_empty");
+            }
+        }
         Player player = asPlayer(sender);
         Double price = args.nextDouble();
         SignRegistration reg = new SignRegistration();
