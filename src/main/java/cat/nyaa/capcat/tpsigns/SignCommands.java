@@ -54,6 +54,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
         reg.description = args.length() == 4 ? nextDescription(args) : "";
         plugin.signDB.query(SignRegistration.class).insert(reg);
         SignDatabase.updateSignContent(reg);
+        SignDatabase.attachedBlocks.put(reg.location.clone(), SignDatabase.getAttachedBlock(reg.location.getBlock()));
         logToConsole(reg, "user.log.tpsign_register", player.getName(), price);
     }
 
@@ -74,6 +75,7 @@ public class SignCommands extends CommandReceiver<Capcat> {
             signLookAt.setLine(i, "");
         }
         signLookAt.update();
+        SignDatabase.attachedBlocks.remove(reg.location.clone());
         logToConsole(reg, "user.log.tpsign_remove", asPlayer(sender).getName());
     }
 

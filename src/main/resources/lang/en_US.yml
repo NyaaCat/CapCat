@@ -5,6 +5,7 @@ user:
     invalid_price: "Price must be between %.1f and %.1f"
     blocked_format_codes: "You can not use the format code: %s"
     world_not_exists: "World %s not exists"
+    break_no_permission: "You can not break this block"
   log:
     tpsign_loc: "[tpsign][%s, %d, %d, %d] "
     tpsign_register: "register, player: %s, acquireFee: %.1f"

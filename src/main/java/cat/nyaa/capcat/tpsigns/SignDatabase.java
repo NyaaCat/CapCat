@@ -9,14 +9,18 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SignDatabase extends SQLiteDatabase {
     private final Capcat plugin;
-
+    public static Map<Location, Block> attachedBlocks = new HashMap<>();
+    
     public SignDatabase(Capcat plugin) {
         this.plugin = plugin;
         connect();
+        updateAttachedBlocks();
     }
 
     @Override
@@ -73,5 +77,30 @@ public class SignDatabase extends SQLiteDatabase {
         }
         s.update();
         return true;
+    }
+
+    public static Block getAttachedBlock(Block block) {
+        if (isSign(block)) {
+            org.bukkit.material.Sign sign = (org.bukkit.material.Sign) block.getState().getData();
+            return block.getRelative(sign.getAttachedFace());
+        }
+        return null;
+    }
+
+    public static boolean isSign(Block block) {
+        if (block != null &&
+                (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN_POST))) {
+            return true;
+        }
+        return false;
+    }
+
+    public void updateAttachedBlocks() {
+        attachedBlocks = new HashMap<>();
+        for (SignRegistration sign : query(SignRegistration.class).select()) {
+            if (sign.location != null && sign.location.getWorld() != null && isSign(sign.location.getBlock())) {
+                attachedBlocks.put(sign.location.clone(), getAttachedBlock(sign.location.getBlock()));
+            }
+        }
     }
 }
