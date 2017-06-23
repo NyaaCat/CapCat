@@ -24,6 +24,9 @@ public class Configuration extends PluginConfigure {
     @Serializable(name = "disabledFormatCodes")
     public List<String> disabledFormatCodes = new ArrayList<>(Arrays.asList("k"));
 
+    @Serializable
+    public int tax = 1;
+
     public Configuration(Capcat plugin) {
         this.plugin = plugin;
         load();

@@ -4,6 +4,7 @@ import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.utils.TeleportUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
+import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -46,8 +47,14 @@ public class SignListener implements Listener {
             player.sendMessage(I18n.format("user.error.not_enough_money"));
             return;
         }
+        double tax = 0.0D;
+        if (plugin.cfg.tax > 0) {
+            tax = (sr.teleportFee / 100) * plugin.cfg.tax;
+            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(tax);
+            plugin.getServer().getPluginManager().callEvent(event);
+        }
         if (signOwner != null) {
-            VaultUtils.deposit(signOwner, sr.teleportFee);
+            VaultUtils.deposit(signOwner, sr.teleportFee - tax);
         }
         float pitch = player.getLocation().getPitch();
         float yaw = player.getLocation().getYaw();
