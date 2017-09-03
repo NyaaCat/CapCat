@@ -29,7 +29,10 @@ user:
 manual:
   help:
     description: "Show help message"
-    usage: "/nu [subCommands...] help"
+    usage: "/cc [subCommands...] help"
+  reload:
+    description: "Reload config"
+    usage: "/cc reload"
   tp:
     sign:
       description: "Register a teleport sign"

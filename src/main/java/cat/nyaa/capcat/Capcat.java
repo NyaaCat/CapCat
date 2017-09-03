@@ -11,6 +11,7 @@ public class Capcat extends JavaPlugin {
     public Commands cmd;
     public SignDatabase signDB;
     public SignListener signListener;
+    public static boolean hasHEH;
 
     @Override
     public void onDisable() {
@@ -25,6 +26,7 @@ public class Capcat extends JavaPlugin {
         cmd = new Commands(this, i18n);
         signDB = new SignDatabase(this);
         signListener = new SignListener(this);
+        hasHEH = getServer().getPluginManager().getPlugin("HamsterEcoHelper") != null;
     }
 
     public void reload() {

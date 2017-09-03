@@ -5,7 +5,7 @@ import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.command.CommandSender;
 
-public class Commands extends CommandReceiver<Capcat> {
+public class Commands extends CommandReceiver {
     private final Capcat plugin;
 
     public Commands(Object plugin, LanguageRepository i18n) {

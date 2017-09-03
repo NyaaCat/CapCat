@@ -36,22 +36,14 @@ repositories {
         name 'nu-langchecker'
         url 'https://raw.githubusercontent.com/Librazy/NyaaUtilsLangChecker/maven-repo'
     }
-
-    maven {
-        name 'nyaa'
-        url 'https://raw.githubusercontent.com/NyaaCat/nyaautils/maven-repo'
-    }
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:3.0-SNAPSHOT') {
+    compile 'org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT'
+    compile('cat.nyaa:nyaacore:4.0-SNAPSHOT') {
         transitive = false
     }
     compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
-    compile('cat.nyaa:nyaautils:3.0-SNAPSHOT') {
-        transitive = false
-    }
 }
 
 compileJava {

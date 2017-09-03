@@ -4,8 +4,8 @@ import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
-import cat.nyaa.nyaautils.api.events.HamsterEcoHelperTransactionApiEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class SignCommands extends CommandReceiver<Capcat> {
+public class SignCommands extends CommandReceiver {
     private final Capcat plugin;
 
     public SignCommands(Object plugin, LanguageRepository i18n) {
@@ -104,8 +104,9 @@ public class SignCommands extends CommandReceiver<Capcat> {
             if (!VaultUtils.enoughMoney(player, sr.acquireFee) || !VaultUtils.withdraw(player, sr.acquireFee)) {
                 throw new BadCommandException("user.error.not_enough_money");
             }
-            HamsterEcoHelperTransactionApiEvent event = new HamsterEcoHelperTransactionApiEvent(sr.acquireFee);
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            if (Capcat.hasHEH) {
+                IPCUtils.callMethod("heh_balance_deposit", sr.acquireFee);
+            }
             plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
             logToConsole(sr, "user.log.tpsign_acquire", player.getName(), sr.acquireFee, sr.teleportFee,
