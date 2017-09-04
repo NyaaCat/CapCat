@@ -16,7 +16,7 @@ before_deploy:
 - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 - git config credential.helper "store --file=.git/credentials"
 - echo "https://${GITHUB_KEY}:@github.com" > .git/credentials
-- git push -q --follow-tags
+- git push -q --follow-tags origin HEAD:$TRAVIS_BRANCH
 - gem install octokit -v 4.3.0
 deploy:
 - provider: releases
@@ -33,7 +33,7 @@ branches:
 env:
   global:
     - main_version=1
-    - archivesBaseName=capcat
+    - archivesBaseName=CapCat
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -f  $HOME/.gradle/caches/3.5/fileHashes/fileHashes.bin
