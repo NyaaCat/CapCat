@@ -2,7 +2,6 @@ package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
-import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.TeleportUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import org.bukkit.*;
@@ -63,8 +62,8 @@ public class SignListener implements Listener {
                     double tax = 0.0D;
                     if (plugin.cfg.tax > 0) {
                         tax = (sr.teleportFee / 100) * plugin.cfg.tax;
-                        if (Capcat.hasHEH) {
-                            IPCUtils.callMethod("heh_balance_deposit", tax);
+                        if (plugin.systemBalance != null) {
+                            plugin.systemBalance.deposit(tax, plugin);
                         }
                     }
                     if (signOwner != null) {

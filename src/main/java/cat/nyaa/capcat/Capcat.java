@@ -2,6 +2,9 @@ package cat.nyaa.capcat;
 
 import cat.nyaa.capcat.tpsigns.SignDatabase;
 import cat.nyaa.capcat.tpsigns.SignListener;
+import cat.nyaa.nyaacore.component.ComponentNotAvailableException;
+import cat.nyaa.nyaacore.component.ISystemBalance;
+import cat.nyaa.nyaacore.component.NyaaComponent;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,7 +14,7 @@ public class Capcat extends JavaPlugin {
     public Commands cmd;
     public SignDatabase signDB;
     public SignListener signListener;
-    public static boolean hasHEH;
+    public ISystemBalance systemBalance;
 
     @Override
     public void onDisable() {
@@ -26,7 +29,11 @@ public class Capcat extends JavaPlugin {
         cmd = new Commands(this, i18n);
         signDB = new SignDatabase(this);
         signListener = new SignListener(this);
-        hasHEH = getServer().getPluginManager().getPlugin("HamsterEcoHelper") != null;
+        try {
+            systemBalance = NyaaComponent.get(ISystemBalance.class);
+        } catch (ComponentNotAvailableException e) {
+            systemBalance = null;
+        }
     }
 
     public void reload() {

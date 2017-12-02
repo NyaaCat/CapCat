@@ -4,7 +4,6 @@ import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
-import cat.nyaa.nyaacore.utils.IPCUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -104,8 +103,8 @@ public class SignCommands extends CommandReceiver {
             if (!VaultUtils.enoughMoney(player, sr.acquireFee) || !VaultUtils.withdraw(player, sr.acquireFee)) {
                 throw new BadCommandException("user.error.not_enough_money");
             }
-            if (Capcat.hasHEH) {
-                IPCUtils.callMethod("heh_balance_deposit", sr.acquireFee);
+            if (plugin.systemBalance != null && sr.acquireFee > 0) {
+                plugin.systemBalance.deposit(sr.acquireFee, plugin);
             }
             plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
