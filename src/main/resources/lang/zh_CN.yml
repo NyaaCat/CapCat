@@ -12,7 +12,7 @@ user:
     tpsign_remove: '移除，玩家: %s'
     tpsign_acquire: '购买, 玩家: %s, 收取费用: %.1f, 传送费用: %.1f, 描述: %s&r, 目标: [%s, %d, %d,
       %d]'
-    tpsign_release: '发布, 玩家: %s, 收取费用: %.1f'
+    tpsign_release: '释放, 玩家: %s, 收取费用: %.1f'
   tp:
     sign_title: '[Teleport]'
     available: <可购买>
@@ -21,7 +21,7 @@ user:
     sign_acquired: 此传送牌已被购买
     need_confirm: 请使用 &b/cc tp create confirm &r以确认
     invalid_confirmation: 无效的确认指令
-    cannot_release: 你无法发布此传送牌
+    cannot_release: 你无法释放此传送牌
     desc_too_long: '最大描述文本长度: %d'
     tp_error: 无法传送的指定位置
     must_empty: 木牌必须保持空白
