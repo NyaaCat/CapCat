@@ -1,48 +1,49 @@
 user:
   error:
-    not_sign: ''
-    not_enough_money: ''
-    invalid_price: ''
-    blocked_format_codes: ''
-    world_not_exists: ''
-    break_no_permission: ''
+    not_sign: 你必须指向一个木牌
+    not_enough_money: 你没有足够的资金
+    invalid_price: 价格必须在 %.1f 与 %.1f 之间
+    blocked_format_codes: '你不能使用此格式代码: %s'
+    world_not_exists: 世界 %s 不存在
+    break_no_permission: 你不能破坏此方块
   log:
-    tpsign_loc: ''
-    tpsign_register: ''
-    tpsign_remove: ''
-    tpsign_acquire: ''
-    tpsign_release: ''
+    tpsign_loc: '[tpsign][%s, %d, %d, %d] '
+    tpsign_register: '注册，玩家: %s，注册费用: %.1f'
+    tpsign_remove: '移除，玩家: %s'
+    tpsign_acquire: '购买, 玩家: %s, 收取费用: %.1f, 传送费用: %.1f, 描述: %s&r, 目标: [%s, %d, %d,
+      %d]'
+    tpsign_release: '发布, 玩家: %s, 收取费用: %.1f'
   tp:
-    sign_title: ''
-    available: ''
-    already_registered: ''
-    not_registered: ''
-    sign_acquired: ''
-    need_confirm: ''
-    invalid_confirmation: ''
-    cannot_release: ''
-    desc_too_long: ''
-    tp_error: ''
-    must_empty: ''
+    sign_title: '[Teleport]'
+    available: <可购买>
+    already_registered: 此传送牌已被注册
+    not_registered: 无效的传送牌
+    sign_acquired: 此传送牌已被购买
+    need_confirm: 请使用 &b/cc tp create confirm &r以确认
+    invalid_confirmation: 无效的确认指令
+    cannot_release: 你无法发布此传送牌
+    desc_too_long: '最大描述文本长度: %d'
+    tp_error: 无法传送的指定位置
+    must_empty: 木牌必须保持空白
     info:
-      owner: ''
+      owner: '传送牌拥有者: %s'
 manual:
   help:
     description: 展示帮助文本
-    usage: ''
+    usage: /cc [子命令...] help
   reload:
-    description: ''
-    usage: ''
+    description: 重新加载配置
+    usage: /cc reload
   tp:
     sign:
-      description: ''
-      usage: ''
+      description: 注册一个传送牌
+      usage: /cc tp sign <价格>
     create:
-      description: ''
-      usage: ''
+      description: 购买一个传送牌
+      usage: /cc tp create <描述> <世界> <x坐标> <y坐标> <z坐标> <传送费用>
     remove:
-      description: ''
-      usage: ''
+      description: 移除一个传送牌
+      usage: /cc tp remove
     release:
-      description: ''
-      usage: ''
+      description: 释放一个传送牌
+      usage: /cc tp release <价格>
