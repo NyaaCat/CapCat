@@ -1,0 +1,48 @@
+user:
+  error:
+    not_sign: ''
+    not_enough_money: ''
+    invalid_price: ''
+    blocked_format_codes: ''
+    world_not_exists: ''
+    break_no_permission: ''
+  log:
+    tpsign_loc: ''
+    tpsign_register: ''
+    tpsign_remove: ''
+    tpsign_acquire: ''
+    tpsign_release: ''
+  tp:
+    sign_title: ''
+    available: ''
+    already_registered: ''
+    not_registered: ''
+    sign_acquired: ''
+    need_confirm: ''
+    invalid_confirmation: ''
+    cannot_release: ''
+    desc_too_long: ''
+    tp_error: ''
+    must_empty: ''
+    info:
+      owner: ''
+manual:
+  help:
+    description: ''
+    usage: ''
+  reload:
+    description: ''
+    usage: ''
+  tp:
+    sign:
+      description: ''
+      usage: ''
+    create:
+      description: ''
+      usage: ''
+    remove:
+      description: ''
+      usage: ''
+    release:
+      description: ''
+      usage: ''
