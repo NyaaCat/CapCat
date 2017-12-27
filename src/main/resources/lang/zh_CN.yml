@@ -28,7 +28,7 @@ user:
       owner: ''
 manual:
   help:
-    description: ''
+    description: 展示帮助文本
     usage: ''
   reload:
     description: ''
