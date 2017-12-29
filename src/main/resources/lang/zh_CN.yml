@@ -1,35 +1,35 @@
 user:
   error:
-    not_sign: 你必须指向一个木牌
-    not_enough_money: 你没有足够的资金
+    not_sign: 你必须准星指向一个木牌
+    not_enough_money: 你没有足够的现金
     invalid_price: 价格必须在 %.1f 与 %.1f 之间
     blocked_format_codes: '你不能使用此格式代码: %s'
     world_not_exists: 世界 %s 不存在
     break_no_permission: 你不能破坏此方块
   log:
     tpsign_loc: '[tpsign][%s, %d, %d, %d] '
-    tpsign_register: '注册，玩家: %s，注册费用: %.1f'
-    tpsign_remove: '移除，玩家: %s'
-    tpsign_acquire: '购买, 玩家: %s, 收取费用: %.1f, 传送费用: %.1f, 描述: %s&r, 目标: [%s, %d, %d,
-      %d]'
-    tpsign_release: '释放, 玩家: %s, 收取费用: %.1f'
+    tpsign_register: '注册传送牌，player: %s, acquireFee: %.1f'
+    tpsign_remove: '移除传送牌，player: %s'
+    tpsign_acquire: '购买传送牌，player: %s, acquireFee: %.1f, teleportFee: %.1f, desc:
+      %s&r, target: [%s, %d, %d, %d]'
+    tpsign_release: '释放传送牌，player: %s, acquireFee: %.1f'
   tp:
     sign_title: '[Teleport]'
     available: <可购买>
-    already_registered: 此传送牌已被注册
+    already_registered: 该传送牌已被注册
     not_registered: 无效的传送牌
     sign_acquired: 此传送牌已被购买
     need_confirm: 请使用 &b/cc tp create confirm &r以确认
     invalid_confirmation: 无效的确认指令
     cannot_release: 你无法释放此传送牌
     desc_too_long: '最大描述文本长度: %d'
-    tp_error: 无法传送的指定位置
-    must_empty: 木牌必须保持空白
+    tp_error: 无法传送至目标位置
+    must_empty: 要使用的木牌必须内容为空
     info:
-      owner: '传送牌拥有者: %s'
+      owner: '传送牌所有者: %s'
 manual:
   help:
-    description: 展示帮助文本
+    description: 显示帮助信息
     usage: /cc [子命令...] help
   reload:
     description: 重新加载配置
@@ -40,7 +40,7 @@ manual:
       usage: /cc tp sign <价格>
     create:
       description: 购买一个传送牌
-      usage: /cc tp create <描述> <世界> <x坐标> <y坐标> <z坐标> <传送费用>
+      usage: /cc tp create <描述> <目标世界> <x坐标> <y坐标> <z坐标> <传送费用>
     remove:
       description: 移除一个传送牌
       usage: /cc tp remove
