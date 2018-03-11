@@ -168,7 +168,7 @@ public class SignCommands extends CommandReceiver {
     public World nextWorld(Arguments args) {
         String worldName = args.nextString();
         World w = Bukkit.getWorld(worldName);
-        if (w == null) throw new BadCommandException("user.error.world_not_exists");
+        if (w == null) throw new BadCommandException("user.error.world_not_exists", worldName);
         return w;
     }
 
