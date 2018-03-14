@@ -1,20 +1,20 @@
 user:
   error:
-    not_sign: 你必须准星指向一个木牌
+    not_sign: 你必须将准星指向一个木牌
     not_enough_money: 你没有足够的现金
-    invalid_price: 价格必须在 %.1f 与 %.1f 之间
+    invalid_price: 价格范围必须在 %.1f 与 %.1f 之间
     blocked_format_codes: '你不能使用此格式代码: %s'
     world_not_exists: 世界 %s 不存在
     break_no_permission: 你不能破坏此方块
   log:
     tpsign_loc: '[tpsign][%s, %d, %d, %d] '
-    tpsign_register: '注册传送牌，player: %s, acquireFee: %.1f'
-    tpsign_remove: '移除传送牌，player: %s'
-    tpsign_acquire: '购买传送牌，player: %s, acquireFee: %.1f, teleportFee: %.1f, desc:
-      %s&r, target: [%s, %d, %d, %d]'
-    tpsign_release: '释放传送牌，player: %s, acquireFee: %.1f'
+    tpsign_register: '注册传送牌，玩家: %s, 注册定价: %.1f'
+    tpsign_remove: '移除传送牌，玩家: %s'
+    tpsign_acquire: '购买传送牌，玩家: %s, 购买费用: %.1f, 传送费用: %.1f, 描述: %s&r, 传送目标: [%s, %d,
+      %d, %d]'
+    tpsign_release: '释放传送牌，玩家: %s, 定价: %.1f'
   tp:
-    sign_title: '[Teleport]'
+    sign_title: '[传送门]'
     available: <可购买>
     already_registered: 该传送牌已被注册
     not_registered: 无效的传送牌
