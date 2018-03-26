@@ -4,6 +4,7 @@ import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
+import cat.nyaa.nyaacore.utils.RayTraceUtils;
 import cat.nyaa.nyaacore.utils.VaultUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -174,9 +175,14 @@ public class SignCommands extends CommandReceiver {
 
     public Sign getSignLookat(CommandSender sender) {
         Player p = asPlayer(sender);
-        Block b = p.getTargetBlock((Set<Material>) null, 5);// TODO use nms rayTrace
-
-        if (b == null || !b.getType().isBlock() || (b.getType() != Material.WALL_SIGN && b.getType() != Material.SIGN_POST)) {
+        Block b;
+        try {
+            b = RayTraceUtils.rayTraceBlock(p);
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+            b = p.getTargetBlock((Set<Material>) null, 5);
+        }
+        if (!SignDatabase.isSign(b)) {
             throw new BadCommandException("user.error.not_sign");
         }
         return (Sign)b.getState();
