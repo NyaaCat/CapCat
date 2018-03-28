@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 configurations.all {
@@ -39,8 +39,8 @@ repositories {
 }
 
 dependencies {
-    compile 'cat.nyaa:nyaacore:5.0-SNAPSHOT'
-    compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    api 'cat.nyaa:nyaacore:5.0-SNAPSHOT'
+    implementation 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
 }
 
 compileJava {
