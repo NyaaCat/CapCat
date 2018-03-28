@@ -29,7 +29,7 @@ repositories {
 
     maven {
         name 'NyaaCore'
-        url 'https://raw.githubusercontent.com/NyaaCat/NyaaCore/maven-repo'
+        url 'https://raw.githubusercontent.com/NyaaCat/NyaaCore/maven-repo-dev'
     }
 
     maven {
@@ -39,10 +39,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.spigotmc:spigot-api:1.12.1-R0.1-SNAPSHOT'
-    compile('cat.nyaa:nyaacore:4.1-SNAPSHOT') {
-        transitive = false
-    }
+    compile 'cat.nyaa:nyaacore:5.0-SNAPSHOT'
     compile 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
 }
 
