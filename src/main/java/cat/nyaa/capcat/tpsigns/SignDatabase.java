@@ -19,7 +19,7 @@ public class SignDatabase implements Cloneable {
     final RelationalDB db = DatabaseUtils.get();
 
     public SignDatabase(Capcat plugin) {
-        SignDatabase.this.plugin = plugin;
+        this.plugin = plugin;
         db.connect();
         updateAttachedBlocks();
     }
