@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
+@Entity
 @Table(name = "sign_registration")
 public class SignRegistration {
     public static final String N_SIGN_ID = "sign_id";
