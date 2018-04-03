@@ -30,7 +30,7 @@ public class SignDatabase implements Cloneable {
      */
     public SignRegistration getSign(Location loc) {
         if (loc == null) throw new IllegalArgumentException();
-        List<SignRegistration> signs = db.query(SignRegistration.class)
+        List<SignRegistration> signs = db.auto(SignRegistration.class)
                                          .whereEq(SignRegistration.N_LOCATION_WORLD_NAME, loc.getWorld().getName())
                                          .whereEq(SignRegistration.N_LOCATION_X, loc.getBlockX())
                                          .whereEq(SignRegistration.N_LOCATION_Y, loc.getBlockY())
@@ -82,7 +82,7 @@ public class SignDatabase implements Cloneable {
 
     public void updateAttachedBlocks() {
         attachedBlocks = new HashMap<>();
-        for (SignRegistration sign : db.query(SignRegistration.class).select()) {
+        for (SignRegistration sign : db.auto(SignRegistration.class).select()) {
             if (sign.location != null && sign.location.getWorld() != null && isSign(sign.location.getBlock())) {
                 attachedBlocks.put(sign.location.clone(), getAttachedBlock(sign.location.getBlock()));
             }
