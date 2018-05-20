@@ -3,14 +3,12 @@ package cat.nyaa.capcat.tpsigns;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name = "sign_registration")
+@Access(AccessType.PROPERTY)
 public class SignRegistration {
     public static final String N_SIGN_ID = "sign_id";
     public static final String N_SIGN_ACQUIRE_FEE = "acquire_fee";
@@ -32,12 +30,16 @@ public class SignRegistration {
     public UUID signId;
     public UUID ownerId;
     @Column(name = N_SIGN_ACQUIRED)
+    @Access(AccessType.FIELD)
     public Boolean acquired;
     @Column(name = N_SIGN_ACQUIRE_FEE)
+    @Access(AccessType.FIELD)
     public Double acquireFee;
     @Column(name = N_SIGN_TELEPORT_FEE)
+    @Access(AccessType.FIELD)
     public Double teleportFee;
     @Column(name = N_SIGN_DESC)
+    @Access(AccessType.FIELD)
     public String description;
 
     public Location location;

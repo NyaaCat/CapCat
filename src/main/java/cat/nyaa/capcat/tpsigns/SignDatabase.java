@@ -16,7 +16,7 @@ import java.util.Map;
 public class SignDatabase implements Cloneable {
     private final Capcat plugin;
     public static Map<Location, Block> attachedBlocks = new HashMap<>();
-    final RelationalDB db = DatabaseUtils.get();
+    public final RelationalDB db = DatabaseUtils.get();
 
     public SignDatabase(Capcat plugin) {
         this.plugin = plugin;
