@@ -1,15 +1,11 @@
 package cat.nyaa.capcat;
 
 import cat.nyaa.capcat.tpsigns.SignCommands;
-import cat.nyaa.capcat.tpsigns.SignRegistration;
 import cat.nyaa.nyaacore.CommandReceiver;
 import cat.nyaa.nyaacore.LanguageRepository;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.RelationalDB;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public class Commands extends CommandReceiver {
     private final Capcat plugin;
@@ -28,7 +24,7 @@ public class Commands extends CommandReceiver {
 
     @SubCommand("tp")
     public SignCommands teleportSignCommands;
-    
+
     @SubCommand(value = "reload", permission = "cc.admin")
     public void reload(CommandSender sender, Arguments args) {
         plugin.reload();
@@ -36,16 +32,16 @@ public class Commands extends CommandReceiver {
 
     @SubCommand(value = "dump", permission = "cc.admin")
     public void databaseDump(CommandSender sender, Arguments args) {
-        String from = args.next();
-        RelationalDB todb =  plugin.signDB.db;
-        RelationalDB fromdb = DatabaseUtils.get(from).connect();
+        String to = args.next();
+        RelationalDB todb = DatabaseUtils.get(to).connect();
+        RelationalDB fromdb = plugin.signDB.db;
         DatabaseUtils.dumpDatabaseAsync(plugin, fromdb, todb, (cls, r) -> {
             if (cls != null) {
-                msg(sender, "internal.info.dump.ing", cls.getName(), from, r);
+                msg(sender, "internal.info.dump.ing", cls.getName(), to, r);
             } else {
                 fromdb.close();
-                if(r == 0){
-                    msg(sender, "internal.info.dump.finished", from);
+                if (r == 0) {
+                    msg(sender, "internal.info.dump.finished", to);
                 } else {
                     msg(sender, "internal.error.command_exception");
                 }
