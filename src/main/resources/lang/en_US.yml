@@ -1,4 +1,8 @@
-user:  
+admin:
+  info:
+    save_done: Force save done.
+    load_done: Force load done.
+user:
   error:
     not_sign: "You must target a sign"
     not_enough_money: "You do not have enough money"

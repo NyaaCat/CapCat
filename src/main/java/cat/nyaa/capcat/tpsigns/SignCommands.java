@@ -57,7 +57,7 @@ public class SignCommands extends CommandReceiver {
         reg.teleportFee = 0D;
         reg.targetLocation = signLookAt.getLocation().clone();
         reg.description = args.length() == 4 ? nextDescription(args) : "";
-        plugin.signDB.query(SignRegistration.class).insert(reg);
+        plugin.signDB.db.auto(SignRegistration.class).insert(reg);
         SignDatabase.updateSignContent(reg);
         SignDatabase.attachedBlocks.put(reg.location.clone(), SignDatabase.getAttachedBlock(reg.location.getBlock()));
         logToConsole(reg, "user.log.tpsign_register", player.getName(), price);
@@ -68,14 +68,14 @@ public class SignCommands extends CommandReceiver {
      * Op only
      * /cc tp remove
      */
-    @SubCommand(value="remove", permission = "cc.tp.remove")
+    @SubCommand(value = "remove", permission = "cc.tp.remove")
     public void removeSign(CommandSender sender, Arguments args) {
         Sign signLookAt = getSignLookat(sender);
         SignRegistration reg = plugin.signDB.getSign(signLookAt.getLocation());
         if (reg == null) {
             throw new BadCommandException("user.tp.not_registered");
         }
-        plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, reg.getSignId()).delete();
+        plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, reg.getSignId()).delete();
         for (int i = 0; i < 4; i++) {
             signLookAt.setLine(i, "");
         }
@@ -85,11 +85,12 @@ public class SignCommands extends CommandReceiver {
     }
 
     private final Map<UUID, SignRegistration> createSignMap = new HashMap<>();
+
     /**
      * Acquire an teleport sign
      * /cc tp create <description> <world> <x> <y> <z> <teleport-price>
      */
-    @SubCommand(value = "create",permission = "cc.tp.create")
+    @SubCommand(value = "create", permission = "cc.tp.create")
     public void acquireSign(CommandSender sender, Arguments args) {
         String description = nextDescription(args);
         Player player = asPlayer(sender);
@@ -99,7 +100,7 @@ public class SignCommands extends CommandReceiver {
             SignRegistration srNow = plugin.signDB.getSign(s.getLocation());
 
             if (sr == null || srNow == null || !s.getLocation().equals(sr.location) || srNow.acquired
-                    || !srNow.signId.equals(sr.signId))
+                        || !srNow.signId.equals(sr.signId))
                 throw new BadCommandException("user.tp.invalid_confirmation");
             if (!VaultUtils.enoughMoney(player, sr.acquireFee) || !VaultUtils.withdraw(player, sr.acquireFee)) {
                 throw new BadCommandException("user.error.not_enough_money");
@@ -107,7 +108,7 @@ public class SignCommands extends CommandReceiver {
             if (plugin.systemBalance != null && sr.acquireFee > 0) {
                 plugin.systemBalance.deposit(sr.acquireFee, plugin);
             }
-            plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
+            plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
             logToConsole(sr, "user.log.tpsign_acquire", player.getName(), sr.acquireFee, sr.teleportFee,
                     sr.description, sr.getTargetWorldName(), sr.getTargetX(), sr.getTargetY(), sr.getTargetZ());
@@ -125,9 +126,9 @@ public class SignCommands extends CommandReceiver {
             double y = args.nextDouble();
             double z = args.nextDouble();
             double price = args.nextDouble();
-            Location loc = new Location(w,x,y,z);
+            Location loc = new Location(w, x, y, z);
             if (!(price <= plugin.cfg.tpsignTeleportFeeMax && price >= plugin.cfg.tpsignTeleportFeeMin)) {
-                throw new BadCommandException("user.error.invalid_price", 
+                throw new BadCommandException("user.error.invalid_price",
                         plugin.cfg.tpsignTeleportFeeMin, plugin.cfg.tpsignTeleportFeeMax);
             }
             sr.description = description;
@@ -161,7 +162,7 @@ public class SignCommands extends CommandReceiver {
         sr.acquireFee = price;
         sr.acquired = false;
         sr.description = "";
-        plugin.signDB.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
+        plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
         SignDatabase.updateSignContent(sr);
         logToConsole(sr, "user.log.tpsign_release", player.getName(), price);
     }
@@ -185,7 +186,7 @@ public class SignCommands extends CommandReceiver {
         if (!SignDatabase.isSign(b)) {
             throw new BadCommandException("user.error.not_sign");
         }
-        return (Sign)b.getState();
+        return (Sign) b.getState();
     }
 
     public String nextDescription(Arguments args) {
@@ -206,6 +207,6 @@ public class SignCommands extends CommandReceiver {
     public void logToConsole(SignRegistration sr, String key, Object... obj) {
         plugin.getLogger().info(I18n.format("user.log.tpsign_loc",
                 sr.getWorldName(), sr.getCoordinateX(), sr.getCoordinateY(), sr.getCoordinateZ()) +
-                I18n.format(key, obj));
+                                        I18n.format(key, obj));
     }
 }

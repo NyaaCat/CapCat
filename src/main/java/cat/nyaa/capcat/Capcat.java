@@ -19,6 +19,7 @@ public class Capcat extends JavaPlugin {
     @Override
     public void onDisable() {
         cfg.save();
+        signDB.db.close();
         HandlerList.unregisterAll(this);
     }
 
@@ -38,6 +39,7 @@ public class Capcat extends JavaPlugin {
 
     public void reload() {
         HandlerList.unregisterAll(this);
+        signDB.db.close();
         onEnable();
     }
 }
