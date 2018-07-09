@@ -47,3 +47,7 @@ manual:
     release:
       description: 释放一个传送牌
       usage: /cc tp release <价格>
+admin:
+  info:
+    save_done: 已强制保存。
+    load_done: 已强制读取配置文件。
