@@ -6,6 +6,7 @@ depend: [NyaaCore]
 softdepend: [HamsterEcoHelper]
 authors: [RecursiveG]
 website: "https://github.com/NyaaCat/capcat"
+api-version: 1.13
 
 commands:
   capcat:
