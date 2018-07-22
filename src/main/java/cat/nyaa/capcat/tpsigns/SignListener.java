@@ -29,7 +29,7 @@ public class SignListener implements Listener {
     public void onPlayerRightClickSign(PlayerInteractEvent ev) {
         Block b = ev.getClickedBlock();
         if (b == null) return;
-        if (!(b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN)) return;
+        if (!(b.getType() == Material.SIGN || b.getType() == Material.WALL_SIGN)) return;
         if (ev.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Sign s = (Sign) b.getState();
         Player player = ev.getPlayer();

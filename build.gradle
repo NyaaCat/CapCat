@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    api 'cat.nyaa:nyaacore:5.0-SNAPSHOT'
+    api 'cat.nyaa:nyaacore:6.0-SNAPSHOT'
     implementation 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
 }
 
