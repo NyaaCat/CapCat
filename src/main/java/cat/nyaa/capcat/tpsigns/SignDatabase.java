@@ -3,7 +3,7 @@ package cat.nyaa.capcat.tpsigns;
 import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.RelationalDB;
+import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,11 +16,10 @@ import java.util.Map;
 public class SignDatabase implements Cloneable {
     private final Capcat plugin;
     public static Map<Location, Block> attachedBlocks = new HashMap<>();
-    public final RelationalDB db = DatabaseUtils.get();
+    public final RelationalDB db = DatabaseUtils.get(RelationalDB.class);
 
     public SignDatabase(Capcat plugin) {
         this.plugin = plugin;
-        db.connect();
         updateAttachedBlocks();
     }
 
@@ -30,13 +29,13 @@ public class SignDatabase implements Cloneable {
      */
     public SignRegistration getSign(Location loc) {
         if (loc == null) throw new IllegalArgumentException();
-        List<SignRegistration> signs = db.auto(SignRegistration.class)
+        List<SignRegistration> signs = db.query(SignRegistration.class)
                                          .whereEq(SignRegistration.N_LOCATION_WORLD_NAME, loc.getWorld().getName())
                                          .whereEq(SignRegistration.N_LOCATION_X, loc.getBlockX())
                                          .whereEq(SignRegistration.N_LOCATION_Y, loc.getBlockY())
                                          .whereEq(SignRegistration.N_LOCATION_Z, loc.getBlockZ())
                                          .select();
-        if (signs.size() <= 0) return null;
+        if (signs.isEmpty()) return null;
         return signs.get(0);
     }
 
@@ -82,7 +81,7 @@ public class SignDatabase implements Cloneable {
 
     public void updateAttachedBlocks() {
         attachedBlocks = new HashMap<>();
-        for (SignRegistration sign : db.auto(SignRegistration.class).select()) {
+        for (SignRegistration sign : db.query(SignRegistration.class).select()) {
             if (sign.location != null && sign.location.getWorld() != null && isSign(sign.location.getBlock())) {
                 attachedBlocks.put(sign.location.clone(), getAttachedBlock(sign.location.getBlock()));
             }

@@ -2,6 +2,7 @@ package cat.nyaa.capcat;
 
 import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.librazy.nclangchecker.LangKey;
 
 public class I18n extends LanguageRepository {
     private final Capcat plugin;
@@ -23,7 +24,7 @@ public class I18n extends LanguageRepository {
         return plugin.cfg.language;
     }
 
-    public static String format(String key, Object... obj) {
+    public static String format(@LangKey String key, Object... obj) {
         return instance.getFormatted(key, obj);
     }
 }

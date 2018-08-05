@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.librazy.nclangchecker.LangKey;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class SignCommands extends CommandReceiver {
         reg.teleportFee = 0D;
         reg.targetLocation = signLookAt.getLocation().clone();
         reg.description = args.length() == 4 ? nextDescription(args) : "";
-        plugin.signDB.db.auto(SignRegistration.class).insert(reg);
+        plugin.signDB.db.query(SignRegistration.class).insert(reg);
         SignDatabase.updateSignContent(reg);
         SignDatabase.attachedBlocks.put(reg.location.clone(), SignDatabase.getAttachedBlock(reg.location.getBlock()));
         logToConsole(reg, "user.log.tpsign_register", player.getName(), price);
@@ -75,7 +76,7 @@ public class SignCommands extends CommandReceiver {
         if (reg == null) {
             throw new BadCommandException("user.tp.not_registered");
         }
-        plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, reg.getSignId()).delete();
+        plugin.signDB.db.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, reg.getSignId()).delete();
         for (int i = 0; i < 4; i++) {
             signLookAt.setLine(i, "");
         }
@@ -108,7 +109,7 @@ public class SignCommands extends CommandReceiver {
             if (plugin.systemBalance != null && sr.acquireFee > 0) {
                 plugin.systemBalance.deposit(sr.acquireFee, plugin);
             }
-            plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
+            plugin.signDB.db.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
             SignDatabase.updateSignContent(sr);
             logToConsole(sr, "user.log.tpsign_acquire", player.getName(), sr.acquireFee, sr.teleportFee,
                     sr.description, sr.getTargetWorldName(), sr.getTargetX(), sr.getTargetY(), sr.getTargetZ());
@@ -162,7 +163,7 @@ public class SignCommands extends CommandReceiver {
         sr.acquireFee = price;
         sr.acquired = false;
         sr.description = "";
-        plugin.signDB.db.auto(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
+        plugin.signDB.db.query(SignRegistration.class).whereEq(SignRegistration.N_SIGN_ID, sr.getSignId()).update(sr);
         SignDatabase.updateSignContent(sr);
         logToConsole(sr, "user.log.tpsign_release", player.getName(), price);
     }
@@ -181,7 +182,7 @@ public class SignCommands extends CommandReceiver {
             b = RayTraceUtils.rayTraceBlock(p);
         } catch (ReflectiveOperationException e) {
             e.printStackTrace();
-            b = p.getTargetBlock((Set<Material>) null, 5);
+            b = p.getTargetBlock(null, 5);
         }
         if (!SignDatabase.isSign(b)) {
             throw new BadCommandException("user.error.not_sign");
@@ -204,7 +205,7 @@ public class SignCommands extends CommandReceiver {
         return desc;
     }
 
-    public void logToConsole(SignRegistration sr, String key, Object... obj) {
+    public void logToConsole(SignRegistration sr, @LangKey String key, Object... obj) {
         plugin.getLogger().info(I18n.format("user.log.tpsign_loc",
                 sr.getWorldName(), sr.getCoordinateX(), sr.getCoordinateY(), sr.getCoordinateZ()) +
                                         I18n.format(key, obj));

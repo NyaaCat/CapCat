@@ -39,10 +39,10 @@ repositories {
 }
 
 dependencies {
-    api 'cat.nyaa:nyaacore:6.0-SNAPSHOT'
-    implementation 'org.librazy:NyaaUtilsLangChecker:1.0-SNAPSHOT'
+    api 'cat.nyaa:nyaacore:6.1-SNAPSHOT'
+    implementation 'org.librazy:NyaaUtilsLangChecker:2.0-SNAPSHOT'
 }
 
 compileJava {
-    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
+    options.compilerArgs += ["-Xplugin:NyaaUtilsLangAnnotationProcessor", "-Xlint:deprecation,unchecked,rawtypes" ]
 }
