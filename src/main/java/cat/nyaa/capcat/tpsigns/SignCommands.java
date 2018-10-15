@@ -178,12 +178,7 @@ public class SignCommands extends CommandReceiver {
     public Sign getSignLookat(CommandSender sender) {
         Player p = asPlayer(sender);
         Block b;
-        try {
-            b = RayTraceUtils.rayTraceBlock(p);
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-            b = p.getTargetBlock(null, 5);
-        }
+        b = RayTraceUtils.rayTraceBlock(p);
         if (!SignDatabase.isSign(b)) {
             throw new BadCommandException("user.error.not_sign");
         }
