@@ -28,8 +28,7 @@ public class SignListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerRightClickSign(PlayerInteractEvent ev) {
         Block b = ev.getClickedBlock();
-        if (b == null) return;
-        if (!(b.getType() == Material.SIGN || b.getType() == Material.WALL_SIGN)) return;
+        if (!SignDatabase.isSign(b)) return;
         if (ev.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Sign s = (Sign) b.getState();
         Player player = ev.getPlayer();

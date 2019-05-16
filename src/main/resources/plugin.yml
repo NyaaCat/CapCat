@@ -1,7 +1,7 @@
 name: Capcat
 main: cat.nyaa.capcat.Capcat
 description: "Capitalized NyaaCraft"
-version: 6.1
+version: ${version}
 depend: [NyaaCore]
 softdepend: [HamsterEcoHelper]
 authors: [RecursiveG]

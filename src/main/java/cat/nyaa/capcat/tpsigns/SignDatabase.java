@@ -47,8 +47,7 @@ public class SignDatabase implements Cloneable {
      */
     public static boolean updateSignContent(SignRegistration sr) {
         Block b = sr.location.getBlock();
-        if (b.getType() != Material.SIGN && b.getType() != Material.WALL_SIGN)
-            return false;
+        if (!isSign(b)) return false;
         Sign s = (Sign) b.getState();
         s.setLine(0, I18n.format("user.tp.sign_title"));
         s.setLine(1, sr.description);
@@ -72,11 +71,7 @@ public class SignDatabase implements Cloneable {
     }
 
     public static boolean isSign(Block block) {
-        if (block != null &&
-                    (block.getType().equals(Material.WALL_SIGN) || block.getType().equals(Material.SIGN))) {
-            return true;
-        }
-        return false;
+        return block != null && block.getType().name().endsWith("_SIGN");
     }
 
     public void updateAttachedBlocks() {
