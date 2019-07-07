@@ -5,9 +5,12 @@ import cat.nyaa.capcat.I18n;
 import cat.nyaa.nyaacore.database.DatabaseUtils;
 import cat.nyaa.nyaacore.database.relational.RelationalDB;
 import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Directional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,14 +67,20 @@ public class SignDatabase implements Cloneable {
 
     public static Block getAttachedBlock(Block block) {
         if (isSign(block)) {
-            org.bukkit.material.Sign sign = (org.bukkit.material.Sign) block.getState().getData();
-            return block.getRelative(sign.getAttachedFace());
+            BlockData data = block.getBlockData();
+            if (Tag.WALL_SIGNS.isTagged(block.getType())) {
+                if (data instanceof Directional) {
+                    return block.getRelative(((Directional) data).getFacing().getOppositeFace());
+                }
+            } else {
+                return block.getRelative(BlockFace.DOWN);
+            }
         }
         return null;
     }
 
     public static boolean isSign(Block block) {
-        return block != null && block.getType().name().endsWith("_SIGN");
+        return block != null && Tag.SIGNS.isTagged(block.getType());
     }
 
     public void updateAttachedBlocks() {
