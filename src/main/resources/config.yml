@@ -1,6 +1,7 @@
 database:
     provider: sqlite
-    connection:
-        autoscan: true
-        package: cat.nyaa.capcat.tpsigns
-        file: capcat.db
+    sqlite_file: capcat.db
+    mysql_url:
+    mysql_username:
+    mysql_password:
+    mysql_jdbc_driver:

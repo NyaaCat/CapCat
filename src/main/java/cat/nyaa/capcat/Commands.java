@@ -1,7 +1,9 @@
 package cat.nyaa.capcat;
 
 import cat.nyaa.capcat.tpsigns.SignCommands;
-import cat.nyaa.nyaacore.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.Arguments;
+import cat.nyaa.nyaacore.cmdreceiver.CommandReceiver;
+import cat.nyaa.nyaacore.cmdreceiver.SubCommand;
 import cat.nyaa.nyaacore.LanguageRepository;
 import org.bukkit.command.CommandSender;
 

@@ -2,8 +2,9 @@ package cat.nyaa.capcat.tpsigns;
 
 import cat.nyaa.capcat.Capcat;
 import cat.nyaa.capcat.I18n;
-import cat.nyaa.nyaacore.database.DatabaseUtils;
-import cat.nyaa.nyaacore.database.relational.RelationalDB;
+import cat.nyaa.nyaacore.orm.DatabaseUtils;
+import cat.nyaa.nyaacore.orm.WhereClause;
+import cat.nyaa.nyaacore.orm.backends.IConnectedDatabase;
 import org.bukkit.Location;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -12,17 +13,24 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 
+import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SignDatabase implements Cloneable {
-    private final Capcat plugin;
     public static Map<Location, Block> attachedBlocks = new HashMap<>();
-    public final RelationalDB db = DatabaseUtils.get(RelationalDB.class);
+    private final Capcat plugin;
+    public IConnectedDatabase db;
 
     public SignDatabase(Capcat plugin) {
         this.plugin = plugin;
+        try {
+            db = DatabaseUtils.connect(plugin, plugin.cfg.backendConfig);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         updateAttachedBlocks();
     }
 
@@ -32,14 +40,10 @@ public class SignDatabase implements Cloneable {
      */
     public SignRegistration getSign(Location loc) {
         if (loc == null) throw new IllegalArgumentException();
-        List<SignRegistration> signs = db.query(SignRegistration.class)
-                                         .whereEq(SignRegistration.N_LOCATION_WORLD_NAME, loc.getWorld().getName())
-                                         .whereEq(SignRegistration.N_LOCATION_X, loc.getBlockX())
-                                         .whereEq(SignRegistration.N_LOCATION_Y, loc.getBlockY())
-                                         .whereEq(SignRegistration.N_LOCATION_Z, loc.getBlockZ())
-                                         .select();
-        if (signs.isEmpty()) return null;
-        return signs.get(0);
+        return db.getUnverifiedTable(SignRegistration.class).selectUniqueUnchecked(WhereClause.EQ(SignRegistration.N_LOCATION_WORLD_NAME, loc.getWorld().getName())
+                .whereEq(SignRegistration.N_LOCATION_X, loc.getBlockX())
+                .whereEq(SignRegistration.N_LOCATION_Y, loc.getBlockY())
+                .whereEq(SignRegistration.N_LOCATION_Z, loc.getBlockZ()));
     }
 
     /**
@@ -85,7 +89,7 @@ public class SignDatabase implements Cloneable {
 
     public void updateAttachedBlocks() {
         attachedBlocks = new HashMap<>();
-        for (SignRegistration sign : db.query(SignRegistration.class).select()) {
+        for (SignRegistration sign : db.getUnverifiedTable(SignRegistration.class).select(WhereClause.EMPTY)) {
             if (sign.location != null && sign.location.getWorld() != null && isSign(sign.location.getBlock())) {
                 attachedBlocks.put(sign.location.clone(), getAttachedBlock(sign.location.getBlock()));
             }

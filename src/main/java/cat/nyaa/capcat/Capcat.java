@@ -8,6 +8,8 @@ import cat.nyaa.nyaacore.component.NyaaComponent;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
+
 public class Capcat extends JavaPlugin {
     public Configuration cfg;
     public I18n i18n;
@@ -19,7 +21,11 @@ public class Capcat extends JavaPlugin {
     @Override
     public void onDisable() {
         cfg.save();
-        signDB.db.close();
+        try {
+            signDB.db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         HandlerList.unregisterAll(this);
     }
 
@@ -39,7 +45,11 @@ public class Capcat extends JavaPlugin {
 
     public void reload() {
         HandlerList.unregisterAll(this);
-        signDB.db.close();
+        try {
+            signDB.db.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         onEnable();
     }
 }

@@ -1,6 +1,9 @@
 package cat.nyaa.capcat;
 
+import cat.nyaa.nyaacore.configuration.ISerializable;
 import cat.nyaa.nyaacore.configuration.PluginConfigure;
+import cat.nyaa.nyaacore.orm.backends.BackendConfig;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ public class Configuration extends PluginConfigure {
 
     @Serializable
     public int tax = 1;
+    public BackendConfig backendConfig;
 
     public Configuration(Capcat plugin) {
         this.plugin = plugin;
@@ -35,5 +39,14 @@ public class Configuration extends PluginConfigure {
     @Override
     protected JavaPlugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public void deserialize(ConfigurationSection config) {
+        ISerializable.deserialize(config, this);
+        backendConfig = BackendConfig.sqliteBackend("capcat.db");
+        if (config.isConfigurationSection("database")) {
+            backendConfig.deserialize(config.getConfigurationSection("database"));
+        }
     }
 }

@@ -1,14 +1,13 @@
 package cat.nyaa.capcat.tpsigns;
 
+import cat.nyaa.nyaacore.orm.annotations.Column;
+import cat.nyaa.nyaacore.orm.annotations.Table;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(name = "sign_registration")
-@Access(AccessType.PROPERTY)
+@Table("sign_registration")
 public class SignRegistration {
     public static final String N_SIGN_ID = "sign_id";
     public static final String N_SIGN_ACQUIRE_FEE = "acquire_fee";
@@ -22,46 +21,29 @@ public class SignRegistration {
     public static final String N_LOCATION_Y = "location_y";
     public static final String N_LOCATION_Z = "location_z";
 
-    public static final String N_TARGET_WORLD="target_world_name";
+    public static final String N_TARGET_WORLD = "target_world_name";
     public static final String N_TARGET_X = "target_x";
     public static final String N_TARGET_Y = "target_y";
     public static final String N_TARGET_Z = "target_z";
-
+    @Column(name = N_SIGN_ID, primary = true)
     public UUID signId;
+    @Column(name = N_SIGN_OWNER)
     public UUID ownerId;
     @Column(name = N_SIGN_ACQUIRED)
-    @Access(AccessType.FIELD)
     public Boolean acquired;
     @Column(name = N_SIGN_ACQUIRE_FEE)
-    @Access(AccessType.FIELD)
     public Double acquireFee;
     @Column(name = N_SIGN_TELEPORT_FEE)
-    @Access(AccessType.FIELD)
     public Double teleportFee;
     @Column(name = N_SIGN_DESC)
-    @Access(AccessType.FIELD)
     public String description;
 
     public Location location;
     public Location targetLocation;
 
-    @Id
-    @Column(name = N_SIGN_ID)
+
     public String getSignId() {
         return signId.toString();
-    }
-
-    public void setSignId(String signId) {
-        this.signId = UUID.fromString(signId);
-    }
-
-    @Column(name = N_SIGN_OWNER)
-    public String getOwnerId() {
-        return ownerId.toString();
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = UUID.fromString(ownerId);
     }
 
     @Column(name = N_LOCATION_WORLD_NAME)
@@ -79,7 +61,7 @@ public class SignRegistration {
 
     @Column(name = N_LOCATION_X)
     public Long getCoordinateX() {
-        return (long)location.getBlockX();
+        return (long) location.getBlockX();
     }
 
     public void setCoordinateX(Long x) {
@@ -92,7 +74,7 @@ public class SignRegistration {
 
     @Column(name = N_LOCATION_Y)
     public Long getCoordinateY() {
-        return (long)location.getBlockY();
+        return (long) location.getBlockY();
     }
 
     public void setCoordinateY(Long y) {
@@ -105,7 +87,7 @@ public class SignRegistration {
 
     @Column(name = N_LOCATION_Z)
     public Long getCoordinateZ() {
-        return (long)location.getBlockZ();
+        return (long) location.getBlockZ();
     }
 
     public void setCoordinateZ(Long z) {
@@ -131,7 +113,7 @@ public class SignRegistration {
 
     @Column(name = N_TARGET_X)
     public Long getTargetX() {
-        return (long)targetLocation.getBlockX();
+        return (long) targetLocation.getBlockX();
     }
 
     public void setTargetX(Long x) {
@@ -144,7 +126,7 @@ public class SignRegistration {
 
     @Column(name = N_TARGET_Y)
     public Long getTargetY() {
-        return (long)targetLocation.getBlockY();
+        return (long) targetLocation.getBlockY();
     }
 
     public void setTargetY(Long y) {
@@ -157,7 +139,7 @@ public class SignRegistration {
 
     @Column(name = N_TARGET_Z)
     public Long getTargetZ() {
-        return (long)targetLocation.getBlockZ();
+        return (long) targetLocation.getBlockZ();
     }
 
     public void setTargetZ(Long z) {
