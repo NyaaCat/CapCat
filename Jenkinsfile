@@ -3,8 +3,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'chmod 0755 gradlew'
-                sh './gradlew publish'
+                sh 'gradle build'
             }
         }
     }
